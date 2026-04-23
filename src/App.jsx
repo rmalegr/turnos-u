@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 const horariosDisponibles = [
@@ -6,10 +6,18 @@ const horariosDisponibles = [
 ]
 
 function App() {
-  const [turnos, setTurnos] = useState([])
+  const [turnos, setTurnos] = useState(() => {
+    const turnosGuardados = localStorage.getItem('turnos')
+    return turnosGuardados ? JSON.parse(turnosGuardados) : []
+  })
   const [nombre, setNombre] = useState('')
   const [fecha, setFecha] = useState('')
   const [horario, setHorario] = useState('')
+
+  // Guardar turnos en localStorage cada vez que cambien
+  useEffect(() => {
+    localStorage.setItem('turnos', JSON.stringify(turnos))
+  }, [turnos])
 
   const reservarTurno = () => {
     if (!nombre || !fecha || !horario) {
